@@ -1,0 +1,746 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.IO;
+using static NoCarsAllowed.Model.TCatalog;
+using static NoCarsAllowed.Form1;
+
+namespace NoCarsAllowed.View
+{
+    public partial class Form2 : Form
+    {
+        Model.TCatalog catalog = new Model.TCatalog();
+        int L, its;
+        string clwarD, clwarN, svwarD;
+        bool show, disabled;
+        public Form2()
+        {
+                show = true;
+                InitializeComponent();
+        }
+        public Model.TCatalog Catalog
+        {
+            get
+            {
+                return catalog;
+            }
+            set
+            {
+                catalog = value;
+            }
+        }
+        private void MAIN_MouseHover(object sender, EventArgs e)
+        {
+            if (show != false)
+            {
+                Blinking(MAIN);
+            }
+        }
+
+        private void MAIN_MouseLeave(object sender, EventArgs e)
+        {
+                a = true;
+                MAIN.ForeColor = Color.White;
+        }
+
+        private void MAIN_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (show!=false)
+            {
+                Form1 f1 = new Form1();
+                f1.Show();
+                f1.Location = this.Location;
+                Pressing(MAIN, '+');
+                this.Close();
+            }
+        }
+        private void MAIN_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (show != false)
+            {
+                Pressing(MAIN, '+');
+            }
+        }
+        public void GetLanguage()
+        {
+            if (L == 0)
+            {
+                its = 0;
+                LanguageChange(LANGUAGE, "ENG");
+                LanguageChange(NEW, "CLEAR", 620, 18, 28);
+                LanguageChange(B3, "|", 590, 15, 28);
+                LanguageChange(SAVE, "SAVE", 479, 18, 28);
+                LanguageChange(B4, "|", 451, 15, 28);
+                LanguageChange(OPEN, "OPEN", 334, 18, 28);
+                LanguageChange(EXIT, "EXIT", 656, 492);
+                LanguageChange(B1, "|", 628, 489);
+                LanguageChange(INFO, "INFO", 522, 492);
+                LanguageChange(B2, "|", 494, 489);
+                LanguageChange(MAIN, "MAIN", 372, 492);
+                clwarN = "Are you sure?";
+                svwarD = "It'll overwrite the save file and it's parameters cannot be reset to the primordial ones.";
+                clwarD = "It'll clear all of the unsaved changes.";
+            }
+            if (L == 1)
+            {
+                its = 1;
+                LanguageChange(LANGUAGE, "RUS");
+                LanguageChange(NEW, "ОЧИСТИТЬ", 582, 23, 21);
+                LanguageChange(B3, "|", 559, 20, 21);
+                LanguageChange(SAVE, "СОХРАНИТЬ", 364, 23, 21);
+                LanguageChange(B4, "|", 341, 20, 21);
+                LanguageChange(OPEN, "ОТКРЫТЬ", 187, 23, 21);
+                LanguageChange(EXIT, "ВЫХОД", 590, 492);
+                LanguageChange(B1, "|", 562, 489);
+                LanguageChange(INFO, "ИНФОРМАЦИЯ", 244, 492);
+                LanguageChange(B2, "|", 215, 489);
+                LanguageChange(MAIN, "ГЛАВНАЯ", 12, 492);
+                clwarN = "Вы уверены?";
+                svwarD = "Данное действие перезапишит файл сохранения и его параметры нельзя будет сбросить до исходных.";
+                clwarD = "Данное действие очистит все несохраненные изменения.";
+            }
+            if (its == 0)
+                L = 1;
+            if (its == 1)
+                L = 0;
+            ReplaceValue("language", its);
+        }
+        private void Form2_Load(object sender, EventArgs e)
+        {
+            L = Int32.Parse(FindValue("language"));
+            GetLanguage();
+            ResetForm2();
+        }
+        public void ResetForm2()
+        {
+            domainRemove.Items.Clear();
+            domain1.Items.Clear();
+            domain2.Items.Clear();
+            domain3.Items.Clear();
+            domain4.Items.Clear();
+            for (int i = catalog.Length; i > 0; i--)
+            {
+                domainRemove.Items.Add(i);
+                domain1.Items.Add(i);
+                domain2.Items.Add(i);
+                domain3.Items.Add(i);
+                domain4.Items.Add(i);
+            }
+            txtName.Text = $"{catalog.Name}";
+            numCars.Text = $"{catalog.Number}";
+            if (Int32.Parse(numCars.Text) == 0)
+            {
+                a = true;
+                disabled = true;
+                domainRemove.Text = "0";
+                MOIST.ForeColor = Color.DimGray;
+                theMoist.Visible = false;
+                AVERAGE.ForeColor = Color.DimGray;
+                theAverage.Visible = false;
+                REMOVE.ForeColor = Color.DimGray;
+                domainRemove.Enabled = false;
+                ASCEND.ForeColor = Color.DimGray;
+            } else
+            {
+                disabled = false;
+                domainRemove.Text = "1";
+                MOIST.ForeColor = Color.White;
+                theMoist.Visible = true;
+                AVERAGE.ForeColor = Color.White;
+                theAverage.Visible = true;
+                REMOVE.ForeColor = Color.White;
+                domainRemove.Enabled = true;
+                ASCEND.ForeColor = Color.White;
+            }
+            theAverage.Text = $": {catalog.AvgServiceTime()}";
+            theMoist.Text = $":  {catalog.MostExpensive()}";
+            if (catalog.Length == 0)
+            {
+
+            }
+            if (catalog.Length == 0)
+            {
+                MARK.Visible = false;
+                BODYCAR.Visible = false;
+                COUNTRY.Visible = false;
+                DATE.Visible = false;
+                PRICE.Visible = false;
+                txtMark1.Visible = false;
+                txtBodycar1.Visible = false;
+                txtCountry1.Visible = false;
+                txtDate1.Visible = false;
+                txtPrice1.Visible = false;
+                domain1.Visible = false;
+                txtMark2.Visible = false;
+                txtBodycar2.Visible = false;
+                txtCountry2.Visible = false;
+                txtDate2.Visible = false;
+                txtPrice2.Visible = false;
+                domain2.Visible = false;
+                txtMark3.Visible = false;
+                txtBodycar3.Visible = false;
+                txtCountry3.Visible = false;
+                txtDate3.Visible = false;
+                txtPrice3.Visible = false;
+                domain3.Visible = false;
+                txtMark4.Visible = false;
+                txtBodycar4.Visible = false;
+                txtCountry4.Visible = false;
+                txtDate4.Visible = false;
+                txtPrice4.Visible = false;
+                domain4.Visible = false;
+            } else
+            {
+                if (catalog.Length == 1)
+                {
+                    MARK.Visible = true;
+                    BODYCAR.Visible = true;
+                    COUNTRY.Visible = true;
+                    DATE.Visible = true;
+                    PRICE.Visible = true;
+                    txtMark1.Visible = true;
+                    txtBodycar1.Visible = true;
+                    txtCountry1.Visible = true;
+                    txtDate1.Visible = true;
+                    txtPrice1.Visible = true;
+                    domain1.Visible = true;
+                    txtMark2.Visible = false;
+                    txtBodycar2.Visible = false;
+                    txtCountry2.Visible = false;
+                    txtDate2.Visible = false;
+                    txtPrice2.Visible = false;
+                    domain2.Visible = false;
+                    txtMark3.Visible = false;
+                    txtBodycar3.Visible = false;
+                    txtCountry3.Visible = false;
+                    txtDate3.Visible = false;
+                    txtPrice3.Visible = false;
+                    domain3.Visible = false;
+                    txtMark4.Visible = false;
+                    txtBodycar4.Visible = false;
+                    txtCountry4.Visible = false;
+                    txtDate4.Visible = false;
+                    txtPrice4.Visible = false;
+                    domain4.Visible = false;
+                    Change(0, domain1, txtMark1, txtBodycar1, txtCountry1, txtDate1, txtPrice1);
+                }
+                else
+                {
+                    if (catalog.Length == 2)
+                    {
+                        MARK.Visible = true;
+                        BODYCAR.Visible = true;
+                        COUNTRY.Visible = true;
+                        DATE.Visible = true;
+                        PRICE.Visible = true;
+                        txtMark1.Visible = true;
+                        txtBodycar1.Visible = true;
+                        txtCountry1.Visible = true;
+                        txtDate1.Visible = true;
+                        txtPrice1.Visible = true;
+                        domain1.Visible = true;
+                        txtMark2.Visible = true;
+                        txtBodycar2.Visible = true;
+                        txtCountry2.Visible = true;
+                        txtDate2.Visible = true;
+                        txtPrice2.Visible = true;
+                        domain2.Visible = true;
+                        txtMark3.Visible = false;
+                        txtBodycar3.Visible = false;
+                        txtCountry3.Visible = false;
+                        txtDate3.Visible = false;
+                        txtPrice3.Visible = false;
+                        domain3.Visible = false;
+                        txtMark4.Visible = false;
+                        txtBodycar4.Visible = false;
+                        txtCountry4.Visible = false;
+                        txtDate4.Visible = false;
+                        txtPrice4.Visible = false;
+                        domain4.Visible = false;
+                        Change(0, domain1, txtMark1, txtBodycar1, txtCountry1, txtDate1, txtPrice1);
+                        Change(1, domain2, txtMark2, txtBodycar2, txtCountry2, txtDate2, txtPrice2);
+                    }
+                    else
+                    {
+                        if (catalog.Length == 3)
+                        {
+                            MARK.Visible = true;
+                            BODYCAR.Visible = true;
+                            COUNTRY.Visible = true;
+                            DATE.Visible = true;
+                            PRICE.Visible = true;
+                            txtMark1.Visible = true;
+                            txtBodycar1.Visible = true;
+                            txtCountry1.Visible = true;
+                            txtDate1.Visible = true;
+                            txtPrice1.Visible = true;
+                            domain1.Visible = true;
+                            txtMark2.Visible = true;
+                            txtBodycar2.Visible = true;
+                            txtCountry2.Visible = true;
+                            txtDate2.Visible = true;
+                            txtPrice2.Visible = true;
+                            domain2.Visible = true;
+                            txtMark3.Visible = true;
+                            txtBodycar3.Visible = true;
+                            txtCountry3.Visible = true;
+                            txtDate3.Visible = true;
+                            txtPrice3.Visible = true;
+                            domain3.Visible = true;
+                            txtMark4.Visible = false;
+                            txtBodycar4.Visible = false;
+                            txtCountry4.Visible = false;
+                            txtDate4.Visible = false;
+                            txtPrice4.Visible = false;
+                            domain4.Visible = false;
+                            Change(0, domain1, txtMark1, txtBodycar1, txtCountry1, txtDate1, txtPrice1);
+                            Change(1, domain2, txtMark2, txtBodycar2, txtCountry2, txtDate2, txtPrice2);
+                            Change(2, domain3, txtMark3, txtBodycar3, txtCountry3, txtDate3, txtPrice3);
+                        }
+                        else
+                        {
+                            if (catalog.Length > 3)
+                            {
+                                MARK.Visible = true;
+                                BODYCAR.Visible = true;
+                                COUNTRY.Visible = true;
+                                DATE.Visible = true;
+                                PRICE.Visible = true;
+                                txtMark1.Visible = true;
+                                txtBodycar1.Visible = true;
+                                txtCountry1.Visible = true;
+                                txtDate1.Visible = true;
+                                txtPrice1.Visible = true;
+                                domain1.Visible = true;
+                                txtMark2.Visible = true;
+                                txtBodycar2.Visible = true;
+                                txtCountry2.Visible = true;
+                                txtDate2.Visible = true;
+                                txtPrice2.Visible = true;
+                                domain2.Visible = true;
+                                txtMark3.Visible = true;
+                                txtBodycar3.Visible = true;
+                                txtCountry3.Visible = true;
+                                txtDate3.Visible = true;
+                                txtPrice3.Visible = true;
+                                domain3.Visible = true;
+                                txtMark4.Visible = true;
+                                txtBodycar4.Visible = true;
+                                txtCountry4.Visible = true;
+                                txtDate4.Visible = true;
+                                txtPrice4.Visible = true;
+                                domain4.Visible = true;
+                                Change(0, domain1, txtMark1, txtBodycar1, txtCountry1, txtDate1, txtPrice1);
+                                Change(1, domain2, txtMark2, txtBodycar2, txtCountry2, txtDate2, txtPrice2);
+                                Change(2, domain3, txtMark3, txtBodycar3, txtCountry3, txtDate3, txtPrice3);
+                                Change(3, domain4, txtMark4, txtBodycar4, txtCountry4, txtDate4, txtPrice4);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        private void Change(int i, DomainUpDown Name, TextBox Mark, TextBox Bodycar, TextBox Country, TextBox Date, TextBox Price)
+        {
+            Name.Text = $"{i + 1}";
+            Mark.Text = $"{catalog[i].Mark}";
+            Bodycar.Text = $"{catalog[i].Bodycar}";
+            Country.Text = $"{catalog[i].Country}";
+            Date.Text = $"{catalog[i].Date}";
+            Price.Text = $"{catalog[i].Price}";
+        }
+        public void EnableForm2(bool disenable)
+        {
+            show = disenable;
+            txtName.Enabled = show;
+            domain1.Enabled = show;
+            txtMark1.Enabled = show;
+            txtBodycar1.Enabled = show;
+            txtCountry1.Enabled = show;
+            txtDate1.Enabled = show;
+            txtPrice1.Enabled = show;
+            domain2.Enabled = show;
+            txtMark2.Enabled = show;
+            txtBodycar2.Enabled = show;
+            txtCountry2.Enabled = show;
+            txtDate2.Enabled = show;
+            txtPrice2.Enabled = show;
+            domain3.Enabled = show;
+            txtMark3.Enabled = show;
+            txtBodycar3.Enabled = show;
+            txtCountry3.Enabled = show;
+            txtDate3.Enabled = show;
+            txtPrice3.Enabled = show;
+            domain4.Enabled = show;
+            txtMark4.Enabled = show;
+            txtBodycar4.Enabled = show;
+            txtCountry4.Enabled = show;
+            txtDate4.Enabled = show;
+            txtPrice4.Enabled = show;
+            domainRemove.Enabled = show;
+        }
+        private void domain1_SelectedItemChanged(object sender, EventArgs e)
+        {
+            Change(Int32.Parse(domain1.Text)-1, domain1, txtMark1, txtBodycar1, txtCountry1, txtDate1, txtPrice1);
+        }
+
+        private void domain2_SelectedItemChanged(object sender, EventArgs e)
+        {
+            Change(Int32.Parse(domain2.Text) - 1, domain2, txtMark2, txtBodycar2, txtCountry2, txtDate2, txtPrice2);
+        }
+
+        private void domain3_SelectedItemChanged(object sender, EventArgs e)
+        {
+            Change(Int32.Parse(domain3.Text) - 1, domain3, txtMark3, txtBodycar3, txtCountry3, txtDate3, txtPrice3);
+        }
+
+        private void domain4_SelectedItemChanged(object sender, EventArgs e)
+        {
+            Change(Int32.Parse(domain4.Text) - 1, domain4, txtMark4, txtBodycar4, txtCountry4, txtDate4, txtPrice4);
+        }
+
+        private void LANGUAGE_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (show != false)
+            {
+                GetLanguage();
+                Pressing(LANGUAGE, '-');
+            }
+        }
+
+        private void LANGUAGE_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (show != false)
+            {
+                Pressing(LANGUAGE, '+');
+            }
+        }
+
+        private void LANGUAGE_MouseHover(object sender, EventArgs e)
+        {
+            if (show != false)
+            {
+                Blinking(LANGUAGE);
+            }
+        }
+
+        private void LANGUAGE_MouseLeave(object sender, EventArgs e)
+        {
+                a = true;
+                LANGUAGE.ForeColor = Color.White;
+        }
+
+        private void NEW_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (show != false)
+            {
+                DialogResult a = MessageBox.Show(clwarD, clwarN, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (a == DialogResult.Yes)
+                {
+                    catalog.Length = 0;
+                }
+                ResetForm2();
+                Pressing(NEW, '-');
+            }
+        }
+
+        private void NEW_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (show != false)
+            {
+                Pressing(NEW, '+');
+            }
+        }
+
+        private void NEW_MouseHover(object sender, EventArgs e)
+        {
+            if (show != false)
+            {
+                Blinking(NEW);
+            }
+        }
+
+        private void RESET_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (show != false)
+            {
+                catalog = new Model.TCatalog();
+                ResetForm2();
+                Pressing(RESET, '-');
+            }
+        }
+
+        private void RESET_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (show != false)
+            {
+                Pressing(RESET, '+');
+            }
+        }
+
+        private void RESET_MouseHover(object sender, EventArgs e)
+        {
+            if (show != false)
+            {
+                Blinking(RESET);
+            }
+        }
+
+        private void RESET_MouseLeave(object sender, EventArgs e)
+        {
+            if (show != false)
+            {
+                a = true;
+                RESET.ForeColor = Color.White;
+            }
+        }
+
+        private void SAVE_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (show != false)
+            {
+                DialogResult a = MessageBox.Show(svwarD, clwarN, MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
+                if (a == DialogResult.Yes)
+                {
+                    if (!File.Exists($@"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName}\save\list.txt"))
+                        CreateBlank($@"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName}\save", 0);
+                    File.Delete($@"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName }\save\list.txt");
+                    File.Create($@"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName }\save\list.txt").Close();
+                    StreamWriter save = new StreamWriter(File.OpenWrite($@"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName }\save\list.txt"));
+                    save.WriteLine($"catalog_name \"{catalog.Name}\"");
+                    save.WriteLine($"num_of_cars \"{catalog.Number}\"");
+                    save.WriteLine($"language \"{its}\"");
+                    for (int i = 0; i < catalog.Length; i++)
+                    {
+                        save.WriteLine();
+                        save.WriteLine($"mark_{i + 1} \"{catalog[i].Mark}\"");
+                        save.WriteLine($"bodycar_{i + 1} \"{catalog[i].Bodycar}\"");
+                        save.WriteLine($"country_{i + 1} \"{catalog[i].Country}\"");
+                        save.WriteLine($"day_{i + 1} \"{catalog[i].Day}\"");
+                        save.WriteLine($"month_{i + 1} \"{catalog[i].Month}\"");
+                        save.WriteLine($"year_{i + 1} \"{catalog[i].Year}\"");
+                        save.WriteLine($"price_{i + 1} \"{catalog[i].Price}\"");
+                    }
+                    save.Close();
+                }
+                ResetForm2();
+                Pressing(SAVE, '-');
+            }
+        }
+
+        private void SAVE_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (show != false)
+            {
+                Pressing(SAVE, '+');
+            }
+        }
+
+        private void SAVE_MouseHover(object sender, EventArgs e)
+        {
+            if (show != false)
+            {
+                Blinking(SAVE);
+            }
+        }
+        private void txtName_TextChanged(object sender, EventArgs e)
+        {
+            catalog.Name = txtName.Text;
+        }
+        private void txtMark1_TextChanged(object sender, EventArgs e)
+        {
+            catalog[Int32.Parse(domain1.Text) - 1].Mark = txtMark1.Text;
+        }
+
+        private void txtBodycar1_TextChanged(object sender, EventArgs e)
+        {
+            catalog[Int32.Parse(domain1.Text) - 1].Bodycar = txtBodycar1.Text;
+        }
+
+        private void txtCountry1_TextChanged(object sender, EventArgs e)
+        {
+            catalog[Int32.Parse(domain1.Text) - 1].Country = txtCountry1.Text;
+        }
+
+        private void txtDate1_TextChanged(object sender, EventArgs e)
+        {
+            catalog[Int32.Parse(domain1.Text) - 1].Date = txtDate1.Text;
+            theAverage.Text = $": {catalog.AvgServiceTime()}";
+        }
+
+        private void txtPrice1_TextChanged(object sender, EventArgs e)
+        {
+            catalog[Int32.Parse(domain1.Text) - 1].Price = Int32.Parse(txtPrice1.Text);
+            theMoist.Text = $":  {catalog.MostExpensive()}";
+        }
+
+        private void txtMark2_TextChanged(object sender, EventArgs e)
+        {
+            catalog[Int32.Parse(domain2.Text) - 1].Mark = txtMark2.Text;
+        }
+
+        private void txtBodycar2_TextChanged(object sender, EventArgs e)
+        {
+            catalog[Int32.Parse(domain2.Text) - 1].Bodycar = txtBodycar2.Text;
+        }
+
+        private void txtCountry2_TextChanged(object sender, EventArgs e)
+        {
+            catalog[Int32.Parse(domain2.Text) - 1].Country = txtCountry2.Text;
+        }
+
+        private void txtDate2_TextChanged(object sender, EventArgs e)
+        {
+            catalog[Int32.Parse(domain2.Text) - 1].Date = txtDate2.Text;
+            theAverage.Text = $": {catalog.AvgServiceTime()}";
+        }
+
+        private void txtPrice2_TextChanged(object sender, EventArgs e)
+        {
+            catalog[Int32.Parse(domain2.Text) - 1].Price = Int32.Parse(txtPrice2.Text);
+            theMoist.Text = $":  {catalog.MostExpensive()}";
+        }
+
+        private void txtMark3_TextChanged(object sender, EventArgs e)
+        {
+            catalog[Int32.Parse(domain3.Text) - 1].Mark = txtMark3.Text;
+        }
+
+        private void txtBodycar3_TextChanged(object sender, EventArgs e)
+        {
+            catalog[Int32.Parse(domain3.Text) - 1].Bodycar = txtBodycar3.Text;
+        }
+
+        private void txtCountry3_TextChanged(object sender, EventArgs e)
+        {
+            catalog[Int32.Parse(domain3.Text) - 1].Country = txtCountry3.Text;
+        }
+
+        private void txtDate3_TextChanged(object sender, EventArgs e)
+        {
+            catalog[Int32.Parse(domain3.Text) - 1].Date = txtDate3.Text;
+            theAverage.Text = $": {catalog.AvgServiceTime()}";
+        }
+
+        private void txtPrice3_TextChanged(object sender, EventArgs e)
+        {
+            catalog[Int32.Parse(domain3.Text) - 1].Price = Int32.Parse(txtPrice3.Text);
+            theMoist.Text = $":  {catalog.MostExpensive()}";
+        }
+
+        private void txtMark4_TextChanged(object sender, EventArgs e)
+        {
+            catalog[Int32.Parse(domain4.Text) - 1].Mark = txtMark4.Text;
+        }
+
+        private void txtBodycar4_TextChanged(object sender, EventArgs e)
+        {
+            catalog[Int32.Parse(domain4.Text) - 1].Bodycar = txtBodycar4.Text;
+        }
+
+        private void txtCountry4_TextChanged(object sender, EventArgs e)
+        {
+            catalog[Int32.Parse(domain4.Text) - 1].Country = txtCountry4.Text;
+        }
+
+        private void txtDate4_TextChanged(object sender, EventArgs e)
+        {
+            catalog[Int32.Parse(domain4.Text) - 1].Date = txtDate4.Text;
+            theAverage.Text = $": {catalog.AvgServiceTime()}";
+        }
+
+        private void txtPrice4_TextChanged(object sender, EventArgs e)
+        {
+            catalog[Int32.Parse(domain4.Text) - 1].Price = Int32.Parse(txtPrice4.Text);
+            theMoist.Text = $":  {catalog.MostExpensive()}";
+        }
+        private void DateChange(DomainUpDown Dmn, TextBox Txt)
+        {
+        }
+        private void ADD_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (show != false)
+            {
+                Pressing(ADD, '+');
+            }
+        }
+
+        private void ADD_MouseHover(object sender, EventArgs e)
+        {
+            if (show != false)
+            {
+                Blinking(ADD);
+            }
+        }
+
+        private void ADD_MouseLeave(object sender, EventArgs e)
+        {
+            a = true;
+            ADD.ForeColor = Color.White;
+        }
+
+        private void REMOVE_MouseDown(object sender, MouseEventArgs e)
+        {
+            if (show != false & disabled == false)
+            {
+                Pressing(REMOVE,'+');
+            }
+        }
+
+        private void REMOVE_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (show != false & disabled == false)
+            {
+                catalog.remove = Int32.Parse(domainRemove.Text);
+                Pressing(REMOVE, '-');
+                ResetForm2();
+            }
+        }
+
+        private void REMOVE_MouseHover(object sender, EventArgs e)
+        {
+            if (show != false & disabled == false)
+            {
+                Blinking(REMOVE);
+            }
+        }
+
+        private void REMOVE_MouseLeave(object sender, EventArgs e)
+        {
+            if (disabled == false)
+            {
+                a = true;
+                REMOVE.ForeColor = Color.White;
+            }
+        }
+
+        private void ADD_MouseUp(object sender, MouseEventArgs e)
+        {
+            if (show != false)
+            {
+                Form3 f3 = new Form3(this);
+                f3.Show();
+                ADD.Font = new Font(ADD.Font.Name, 15);
+                a = true;
+                ADD.ForeColor = Color.White;
+                EnableForm2(false);
+            }
+        }
+        private void SAVE_MouseLeave(object sender, EventArgs e)
+        {
+            a = true;
+            SAVE.ForeColor = Color.White;
+        }
+        private void NEW_MouseLeave(object sender, EventArgs e)
+        {
+            a = true;
+            NEW.ForeColor = Color.White;
+        }
+    }
+}

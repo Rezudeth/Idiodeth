@@ -1,0 +1,42 @@
+
+        public string FindValue(string Name, int id)
+        {
+            StreamReader sr = new StreamReader($@"{Directory.GetParent(Directory.GetCurrentDirectory()).Parent.FullName }\save\list.txt", Encoding.Default);
+            string line = "";
+            try
+            {
+                while (sr != null)
+                {
+                    line = sr.ReadLine();
+                    if (line.Contains(Name) & line.Contains($"[{id+1}]"))
+                    {
+                        break;
+                    }
+                }
+            }
+            catch
+            {
+                return "0";
+            }
+            string result = "";
+            string search = Name;
+            for (int i = Name.Length; i < line.Length; i++)
+            {
+                if (search[i - 1] == '"')
+                {
+                    for (int j = search.Length; j < line.Length; j++)
+                    {
+                        if (line[j] == '"')
+                        {
+                            if (line[j - 1] == '"')
+                                continue;
+                            break;
+                        }
+                        result += line[j];
+                    }
+                    break;
+                }
+                search += line[i];
+            }
+            return result;
+        }

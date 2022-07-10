@@ -1,0 +1,283 @@
+catalog_name "Your name"
+language "0"
+num_of_cars "5"
+
+mark_1 "Oh"
+bodycar_1 "Capot"
+country_1 "Strana"
+day_1 "1"
+month_1 "6"
+year_1 "2001"
+price_1 "400"
+
+mark_2 "Hi"
+bodycar_2 "Capot nu blin"
+country_2 "Russia"
+day_2 "24"
+month_2 "2"
+year_2 "2022"
+price_2 "500"
+
+mark_3 "Mark"
+bodycar_3 "topaC"
+country_3 "Strana vot"
+day_3 "21"
+month_3 "5"
+year_3 "1997"
+price_3 "200"
+
+mark_4 "Oh"
+bodycar_4 "Capot nu kapec"
+country_4 "Ukraine"
+day_4 "20"
+month_4 "2"
+year_4 "2014"
+price_4 "333"
+
+mark_5 "Hey"
+bodycar_5 "chto"
+country_5 "anartS"
+day_5 "30"
+month_5 "3"
+year_5 "1897"
+price_5 "1"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
